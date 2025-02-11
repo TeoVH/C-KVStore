@@ -18,7 +18,7 @@ El objetivo principal es **almacenar en caché datos de acceso frecuente** para 
 - 🛠 **Operaciones implementadas**:  
   - ✅ **Insertar (`insert()`)** - Almacena un par clave-valor en la tabla hash.  
   - ✅ **Buscar (`get()`)** - Recupera un valor dada una clave.  
-  - ⏳ **Eliminar (`delete()`)** - En desarrollo.  
+  - ✅ **Eliminar (`delete()`)** - Elimia un valor dada una clave.  
 
 ---
 
