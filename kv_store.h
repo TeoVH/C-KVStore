@@ -12,7 +12,7 @@ typedef struct Node {
 
 // Estructura de la tabla hash
 typedef struct {
-    Node *buckets[TABLE_SIZE];  // Array de punteros a nodos
+    Node *buckets[TABLE_SIZE];  // Array de punteros
 } HashTable;
 
 // Funciones principales
