@@ -21,5 +21,6 @@ void freeHashTable(HashTable *table);
 void insert(HashTable *table, const char *key, const char *value);
 unsigned int hashFunction(const char *key);
 char* get(HashTable *table, const char *key);
+void delete(HashTable *table, const char *key);
 
 #endif
