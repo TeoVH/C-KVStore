@@ -83,3 +83,27 @@ char* get(HashTable *table, const char *key) {
     return NULL;  // Si la clave no se encuentra
 }
 
+void delete(HashTable *table, const char *key) {
+    if (!table || !key) return;  // Verificar que la tabla y la clave sean válidas
+
+    unsigned int index = hashFunction(key);  // Obtener índice en la tabla hash
+    Node *current = table->buckets[index];
+    Node *prev = NULL;
+
+    while (current) {
+        if (strcmp(current->key, key) == 0) {  // Si encontramos la clave
+            if (prev) {
+                prev->next = current->next;  // Saltar el nodo actual
+            } else {
+                table->buckets[index] = current->next;  // Si es el primer nodo, actualizar el bucket
+            }
+            free(current->key);  // Liberar memoria de la clave
+            free(current->value);  // Liberar memoria del valor
+            free(current);  // Liberar el nodo
+            return;  // Salir de la función después de eliminar
+        }
+        prev = current;
+        current = current->next;
+    }
+}
+
