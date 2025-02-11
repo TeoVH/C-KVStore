@@ -2,6 +2,7 @@
 #include "kv_store.h"
 
 int main() {
+    //Este es el Main
     // Crear HashTable
     HashTable *table = createHashTable();
     printf("HashTable creada\n");
