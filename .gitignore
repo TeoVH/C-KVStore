@@ -3,6 +3,7 @@
 *.o
 *.out
 *.exe
+*.csv
 
 # Binarios y ejecutables
 kv_store
