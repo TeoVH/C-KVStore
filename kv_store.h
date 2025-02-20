@@ -1,37 +1,61 @@
+// kv_store.h - Definición de estructuras y funciones
 #ifndef KV_STORE_H
 #define KV_STORE_H
 
-#include <stdint.h>
-#include <sys/types.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-// Prototipo para obtener el siguiente número primo (para la tabla hash dinámica)
-size_t nextPrime(size_t n);
+#define HASH_TABLE_SIZE 1000003 // Número primo cercano para reducir colisiones
 
-// Estructura de un nodo (bucket) en la tabla hash
-typedef struct Node {
-    char *key;
-    char *value;
-    struct Node *next;
-} Node;
-
-// Estructura de la tabla hash (dinámica)
+// Estructura para almacenar juegos
 typedef struct {
-    size_t size;    // Tamaño de la tabla hash (calculado en tiempo de ejecución)
-    Node **buckets; // Array dinámico de punteros a Node
+    int app_id;
+    char title[256];
+    int positive_ratio;
+    int user_reviews;
+} Game;
+
+// Estructura para almacenar usuarios
+typedef struct {
+    int user_id;
+    int recommendations;
+} User;
+
+// Estructura para almacenar recomendaciones
+typedef struct {
+    int app_id;
+    int user_id;
+    bool is_recommended;
+    float hours;
+    int review_id;
+} Recommendation;
+
+// Nodo de la tabla hash
+typedef struct HashNode {
+    int key;
+    void *value;
+    struct HashNode *next;
+} HashNode;
+
+// Estructura de la tabla hash
+typedef struct {
+    HashNode **buckets;
 } HashTable;
 
-// Funciones principales de la tabla hash
-HashTable* createHashTableForFile(const char *filename, size_t avgLineSize);
-void freeHashTable(HashTable *table);
-void insert(HashTable *table, const char *key, const char *value);
-unsigned int hashFunction(const char *key, HashTable *table);
-char* get(HashTable *table, const char *key);
-void delete(HashTable *table, const char *key);
+// Funciones para manejar la tabla hash
+HashTable* create_hash_table();
+void insert(HashTable *table, int key, void *value);
+void* search(HashTable *table, int key);
+void delete(HashTable *table, int key);
+void free_hash_table(HashTable *table);
 
-// Funciones para cargar CSVs
-void loadCSV(HashTable *table, const char *filename);
-void loadGamesCSV(HashTable *table, const char *filename);
-void loadUsersCSV(HashTable *table, const char *filename);
+// Funciones para manejar los datos del Key-Value Store
+void load_games(const char *filename, HashTable *table);
+void load_users(const char *filename, HashTable *table);
+void load_recommendations(const char *filename, HashTable *table);
+void verify_hash_table(HashTable *table);
 
-#endif
+#endif // KV_STORE_H
 

@@ -1,40 +1,75 @@
-#include <stdio.h>
-#include <time.h>
 #include "kv_store.h"
+#include <dirent.h>
+#include <stdlib.h>
 
-int main() {
-    // Crear la tabla hash en función del tamaño del archivo games.csv (promedio estimado de 100 bytes por línea)
-    HashTable *table = createHashTableForFile("games.csv", 100);
-    if (!table) {
-        fprintf(stderr, "Error creando la tabla hash\n");
+// Función para verificar si la carpeta de datos existe
+int verificar_carpeta(const char *path) {
+    DIR *dir = opendir(path);
+    if (dir) {
+        closedir(dir);
         return 1;
     }
-
-    // Medir tiempo de carga de games.csv
-    clock_t start = clock();
-    loadCSV(table, "games.csv");
-    clock_t end = clock();
-    printf("Tiempo de carga (games.csv): %f segundos\n", (double)(end - start) / CLOCKS_PER_SEC);
-
-    // Medir tiempo de carga de users.csv
-    start = clock();
-    loadCSV(table, "users.csv");
-    end = clock();
-    printf("Tiempo de carga (users.csv): %f segundos\n", (double)(end - start) / CLOCKS_PER_SEC);
-
-    // Verificar algunos datos de games.csv (app_id -> title)
-    printf("\nVerificación de games.csv:\n");
-    printf("Juego 13500: %s\n", get(table, "13500"));
-    printf("Juego 22364: %s\n", get(table, "22364"));
-    printf("Juego 113020: %s\n", get(table, "113020"));
-
-    // Verificar algunos datos de users.csv (user_id -> products)
-    printf("\nVerificación de users.csv:\n");
-    printf("Usuario 7360263: %s\n", get(table, "7360263"));
-    printf("Usuario 14020781: %s\n", get(table, "14020781"));
-    printf("Usuario 8762579: %s\n", get(table, "8762579"));
-
-    freeHashTable(table);
     return 0;
 }
 
+// Función para mostrar el menú
+void mostrar_menu() {
+    printf("\n--------------------------------------------------------------------------\n");
+    printf("Menú de Consultas\n");
+    printf("--------------------------------------------------------------------------\n");
+    printf("a. Indicar cuales son los 10 juegos más recomendados\n");
+    printf("b. Indicar cuales son los 10 juegos menos recomendados\n");
+    printf("c. Indicar cuales son los 10 usuarios con más recomendaciones\n");
+    printf("d. Indicar cuales son los juegos que más recomiendan los 10 usuarios\n");
+    printf("e. Salir del programa\n");
+    printf("--------------------------------------------------------------------------\n");
+}
+
+int main() {
+    const char *carpeta_datos = "FOLDER";
+    
+    if (!verificar_carpeta(carpeta_datos)) {
+        printf("Error: La carpeta '%s' no existe.\n", carpeta_datos);
+        return 1;
+    }
+    
+    HashTable *table = create_hash_table();
+    
+    printf("Cargando recommendations.csv...\n");
+    load_recommendations("FOLDER/recommendations.csv", table);
+    printf("Cargando games.csv...\n");
+    load_games("FOLDER/games.csv", table);
+    printf("Cargando users.csv...\n");
+    load_users("FOLDER/users.csv", table);
+    printf("Carga completada.\n");
+    
+    char opcion;
+    do {
+        mostrar_menu();
+        printf("Seleccione una opción: ");
+        scanf(" %c", &opcion);
+        
+        switch (opcion) {
+            case 'a':
+                printf("Mostrando los 10 juegos más recomendados...\n");
+                break;
+            case 'b':
+                printf("Mostrando los 10 juegos menos recomendados...\n");
+                break;
+            case 'c':
+                printf("Mostrando los 10 usuarios con más recomendaciones...\n");
+                break;
+            case 'd':
+                printf("Mostrando los juegos que más recomiendan los 10 usuarios...\n");
+                break;
+            case 'e':
+                printf("Saliendo del programa...\n");
+                break;
+            default:
+                printf("Opción no válida. Intente de nuevo.\n");
+        }
+    } while (opcion != 'e');
+    
+    free_hash_table(table);
+    return 0;
+}
