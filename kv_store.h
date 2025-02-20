@@ -55,7 +55,7 @@ void free_hash_table(HashTable *table);
 void load_games(const char *filename, HashTable *table);
 void load_users(const char *filename, HashTable *table);
 void load_recommendations(const char *filename, HashTable *table);
-void verify_hash_table(HashTable *table);
+void debug_hash_table(HashTable *table);
 
 #endif // KV_STORE_H
 

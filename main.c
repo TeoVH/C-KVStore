@@ -43,6 +43,10 @@ int main() {
     load_users("FOLDER/users.csv", table);
     printf("Carga completada.\n");
     
+    // Verificar que los datos se almacenaron correctamente
+    printf("\nVerificando la tabla hash...\n");
+    debug_hash_table(table);
+    
     char opcion;
     do {
         mostrar_menu();
@@ -73,3 +77,4 @@ int main() {
     free_hash_table(table);
     return 0;
 }
+

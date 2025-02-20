@@ -173,17 +173,39 @@ void load_users(const char *filename, HashTable *table) {
     printf("Tiempo de carga de users.csv: %.3f segundos\n", elapsed_time);
 }
 
-void verify_hash_table(HashTable *table) {
-    int count = 0;
+void debug_hash_table(HashTable *table) {
+    int total_elements = 0;
+    int non_empty_buckets = 0;
+    int max_bucket_size = 0;
+
     for (int i = 0; i < HASH_TABLE_SIZE; i++) {
+        int bucket_size = 0;
         HashNode *node = table->buckets[i];
         while (node) {
-            count++;
-            if (count <= 10) { // Mostrar solo los primeros 10 elementos
-                printf("Clave: %d\n", node->key);
-            }
+            total_elements++;
+            bucket_size++;
             node = node->next;
         }
+        if (bucket_size > 0) {
+            non_empty_buckets++;
+            if (bucket_size > max_bucket_size) {
+                max_bucket_size = bucket_size;
+            }
+        }
     }
-    printf("Total de elementos almacenados en la tabla hash: %d\n", count);
+
+    printf("\n[DEBUG] Tabla Hash:\n");
+    printf("Total de elementos almacenados: %d\n", total_elements);
+    printf("Buckets no vacíos: %d\n", non_empty_buckets);
+    printf("Tamaño máximo en un bucket: %d\n", max_bucket_size);
+
+    // Imprimir algunas claves aleatorias
+    printf("\nEjemplo de claves almacenadas:\n");
+    int printed = 0;
+    for (int i = 0; i < HASH_TABLE_SIZE && printed < 5; i++) {
+        if (table->buckets[i]) {
+            printf("Bucket %d: Clave %d\n", i, table->buckets[i]->key);
+            printed++;
+        }
+    }
 }
