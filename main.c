@@ -71,7 +71,7 @@ int main() {
                 break;
             case 'c':
                 printf("Mostrando los 10 usuarios con más recomendaciones...\n");
-                // Implementar consulta para usuarios
+                top_10_users_most_reviews(table_users);
                 break;
             case 'd':
                 printf("Mostrando los juegos que más recomiendan los 10 usuarios...\n");
