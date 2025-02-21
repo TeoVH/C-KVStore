@@ -50,6 +50,12 @@ typedef struct {
     int count;
 } GameCount;
 
+// Estructura auxiliar para usuarios (para la consulta)
+typedef struct {
+    int user_id;
+    int reviews;
+} UserCount;
+
 // Funciones para manejar la tabla hash
 HashTable* create_hash_table();
 void insert(HashTable *table, int key, void *value);
