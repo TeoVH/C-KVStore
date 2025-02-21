@@ -1,3 +1,4 @@
+// main.c - Menú interactivo para consultas
 #include "kv_store.h"
 #include <dirent.h>
 #include <stdlib.h>
@@ -33,19 +34,26 @@ int main() {
         return 1;
     }
     
-    HashTable *table = create_hash_table();
+    // Crear tablas hash separadas para cada tipo de datos
+    HashTable *table_games = create_hash_table();
+    HashTable *table_recommendations = create_hash_table();
+    HashTable *table_users = create_hash_table();
     
-    printf("Cargando recommendations.csv...\n");
-    load_recommendations("FOLDER/recommendations.csv", table);
     printf("Cargando games.csv...\n");
-    load_games("FOLDER/games.csv", table);
+    load_games("FOLDER/games.csv", table_games);
+    printf("Cargando recommendations.csv...\n");
+    load_recommendations("FOLDER/recommendations.csv", table_recommendations);
     printf("Cargando users.csv...\n");
-    load_users("FOLDER/users.csv", table);
+    load_users("FOLDER/users.csv", table_users);
     printf("Carga completada.\n");
     
-    // Verificar que los datos se almacenaron correctamente
-    printf("\nVerificando la tabla hash...\n");
-    debug_hash_table(table);
+    // Opcional: Verificar la carga de cada tabla (para depuración)
+    printf("\nVerificando la tabla hash de juegos...\n");
+    debug_hash_table(table_games);
+    printf("\nVerificando la tabla hash de recomendaciones...\n");
+    debug_hash_table(table_recommendations);
+    printf("\nVerificando la tabla hash de usuarios...\n");
+    debug_hash_table(table_users);
     
     char opcion;
     do {
@@ -55,16 +63,19 @@ int main() {
         
         switch (opcion) {
             case 'a':
-                top_10_most_recommended(table);
+                top_10_most_recommended(table_games, table_recommendations);
                 break;
             case 'b':
                 printf("Mostrando los 10 juegos menos recomendados...\n");
+                top_10_least_recommended(table_games, table_recommendations);
                 break;
             case 'c':
                 printf("Mostrando los 10 usuarios con más recomendaciones...\n");
+                // Implementar consulta para usuarios
                 break;
             case 'd':
                 printf("Mostrando los juegos que más recomiendan los 10 usuarios...\n");
+                // Implementar consulta para usuarios
                 break;
             case 'e':
                 printf("Saliendo del programa...\n");
@@ -74,7 +85,9 @@ int main() {
         }
     } while (opcion != 'e');
     
-    free_hash_table(table);
+    free_hash_table(table_games);
+    free_hash_table(table_recommendations);
+    free_hash_table(table_users);
+    
     return 0;
 }
-
