@@ -25,10 +25,11 @@ Para lograrlo, se utilizan **tablas hash separadas** para cada tipo de dato, lo 
   - ✅ **Insertar (`insert()`)**: Almacena un par clave-valor en la tabla hash.  
   - ✅ **Buscar (`search()`)**: Recupera un valor dada una clave.  
   - ✅ **Eliminar (`delete()`)**: Elimina un valor dada una clave.  
-- 📊 **Consultas de datos**:  
-  - ✅ **Top 10 juegos más recomendados**: Se acumulan las recomendaciones positivas y se ordenan de mayor a menor.  
-  - ✅ **Top 10 juegos menos recomendados**: Se acumulan las recomendaciones negativas y se ordenan de menor a mayor.  
-  - (Se pueden implementar consultas adicionales para usuarios, etc.)
+- 📊 Consultas de datos:
+  - **Top 10 Juegos Más Recomendados:** Se acumulan las recomendaciones positivas a partir de los datos de recomendaciones y se ordenan los juegos en orden descendente según la cantidad de recomendaciones.
+  - **Top 10 Juegos Menos Recomendados:** Se acumulan las recomendaciones negativas a partir de los datos de recomendaciones y se ordenan los juegos en orden ascendente según la cantidad de recomendaciones negativas.
+  - **Top 10 Usuarios con Más Reviews:** Se ordenan los usuarios en función de la cantidad de reviews (del archivo users.csv) en orden descendente.
+  - **Juegos Recomendados por los Top 10 Usuarios:** (Mejora futura)
 
 ---
 
