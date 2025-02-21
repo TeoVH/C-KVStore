@@ -56,12 +56,17 @@ void insert(HashTable *table, int key, void *value);
 void* search(HashTable *table, int key);
 void delete(HashTable *table, int key);
 void free_hash_table(HashTable *table);
+void debug_hash_table(HashTable *table);
 
-// Funciones para manejar los datos del Key-Value Store
+// Funciones para cargar los archivos CSV en las tablas hash
 void load_games(const char *filename, HashTable *table);
 void load_users(const char *filename, HashTable *table);
 void load_recommendations(const char *filename, HashTable *table);
-void debug_hash_table(HashTable *table);
+
+// Función para obtener el título de un juego a partir de su app_id
+const char* get_game_title(HashTable *table, int app_id);
+int compare_games(const void *a, const void *b);
+void top_10_most_recommended(HashTable *table_games, HashTable *table_recommendations);
 
 #endif // KV_STORE_H
 
