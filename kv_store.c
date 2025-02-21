@@ -209,3 +209,50 @@ void debug_hash_table(HashTable *table) {
         }
     }
 }
+
+// Función de comparación para ordenar juegos de mayor a menor
+int compare_games(const void *a, const void *b) {
+    return ((GameCount *)b)->count - ((GameCount *)a)->count;
+}
+
+// Función para encontrar los 10 juegos más recomendados
+void top_10_most_recommended(HashTable *table) {
+    printf("\nLos 10 juegos más recomendados:\n");
+
+    // Crear un array temporal para almacenar los juegos y sus conteos
+    GameCount *games = malloc(HASH_TABLE_SIZE * sizeof(GameCount));
+    int game_count = 0;
+
+    for (int i = 0; i < HASH_TABLE_SIZE; i++) {
+        HashNode *node = table->buckets[i];
+        while (node) {
+            Recommendation *rec = (Recommendation *)node->value;
+            if (rec->is_recommended) {
+                int found = 0;
+                for (int j = 0; j < game_count; j++) {
+                    if (games[j].app_id == rec->app_id) {
+                        games[j].count++;
+                        found = 1;
+                        break;
+                    }
+                }
+                if (!found) {
+                    games[game_count].app_id = rec->app_id;
+                    games[game_count].count = 1;
+                    game_count++;
+                }
+            }
+            node = node->next;
+        }
+    }
+
+    // Ordenar los juegos por número de recomendaciones
+    qsort(games, game_count, sizeof(GameCount), compare_games);
+
+    // Imprimir los 10 juegos más recomendados
+    for (int i = 0; i < 10 && i < game_count; i++) {
+        printf("Juego ID: %d, Recomendaciones: %d\n", games[i].app_id, games[i].count);
+    }
+
+    free(games);
+}

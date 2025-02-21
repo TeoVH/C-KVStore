@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define HASH_TABLE_SIZE 1000003 // Número primo cercano para reducir colisiones
+#define HASH_TABLE_SIZE 2000003 // Número primo cercano para reducir colisiones
 
 // Estructura para almacenar juegos
 typedef struct {
@@ -43,6 +43,12 @@ typedef struct HashNode {
 typedef struct {
     HashNode **buckets;
 } HashTable;
+
+// Estructura auxiliar para ordenar juegos
+typedef struct {
+    int app_id;
+    int count;
+} GameCount;
 
 // Funciones para manejar la tabla hash
 HashTable* create_hash_table();
