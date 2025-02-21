@@ -55,7 +55,7 @@ int main() {
         
         switch (opcion) {
             case 'a':
-                printf("Mostrando los 10 juegos más recomendados...\n");
+                top_10_most_recommended(table);
                 break;
             case 'b':
                 printf("Mostrando los 10 juegos menos recomendados...\n");
