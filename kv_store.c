@@ -202,6 +202,7 @@ void load_users(const char *filename, HashTable *table) {
     while (fgets(line, sizeof(line), file)) {
         User *user = (User*)malloc(sizeof(User));
         user->user_id = atoi(strtok(line, ","));
+	strtok(NULL, ",");
         user->recommendations = atoi(strtok(NULL, ","));
         
         insert(table, user->user_id, user);
@@ -312,7 +313,7 @@ void top_10_least_recommended(HashTable *table_games, HashTable *table_recommend
         HashNode *node = table_recommendations->buckets[i];
         while (node) {
             Recommendation *rec = (Recommendation *)node->value;
-            if (rec && rec->is_recommended) {
+            if (rec && !rec->is_recommended) {
                 int found = 0;
                 // Buscar si ya se registró este juego en el arreglo
                 for (int j = 0; j < game_count; j++) {
@@ -343,7 +344,7 @@ void top_10_least_recommended(HashTable *table_games, HashTable *table_recommend
     }
 
     // Ordenar los juegos por número de recomendaciones de menor a mayor
-    qsort(games, game_count, sizeof(GameCount), compare_games_asc);
+    qsort(games, game_count, sizeof(GameCount), compare_games);
 
     // Imprimir los 10 juegos menos recomendados junto con sus nombres
     for (int i = 0; i < 10 && i < game_count; i++) {
@@ -352,4 +353,60 @@ void top_10_least_recommended(HashTable *table_games, HashTable *table_recommend
     }
 
     free(games);
+}
+
+// Función de comparación para ordenar usuarios de mayor a menor según reviews
+int compare_users(const void *a, const void *b) {
+    return ((UserCount *)b)->reviews - ((UserCount *)a)->reviews;
+}
+
+// Función para encontrar los 10 usuarios con más reviews y mostrarlos
+void top_10_users_most_reviews(HashTable *table_users) {
+    printf("\nLos 10 usuarios con más reviews:\n");
+
+    // Crear un array dinámico para almacenar los usuarios y sus reviews.
+    // Se asume que no habrá más de 10,000 usuarios distintos (se expande si es necesario)
+    int capacity = 10000;
+    UserCount *usersArr = malloc(capacity * sizeof(UserCount));
+    if (!usersArr) {
+        printf("Error: No se pudo asignar memoria para usuarios.\n");
+        return;
+    }
+    int user_count = 0;
+
+    // Recorrer la tabla hash de usuarios
+    for (int i = 0; i < HASH_TABLE_SIZE; i++) {
+        HashNode *node = table_users->buckets[i];
+        while (node) {
+            User *user = (User *)node->value;
+            if (user) {
+                // Si se alcanza la capacidad, se expande el arreglo
+                if (user_count >= capacity) {
+                    capacity *= 2;
+                    UserCount *temp = realloc(usersArr, capacity * sizeof(UserCount));
+                    if (!temp) {
+                        printf("Error: No se pudo reasignar memoria para usuarios.\n");
+                        free(usersArr);
+                        return;
+                    }
+                    usersArr = temp;
+                }
+                // Almacenar la información relevante para la consulta
+                usersArr[user_count].user_id = user->user_id;
+                usersArr[user_count].reviews = user->recommendations;
+                user_count++;
+            }
+            node = node->next;
+        }
+    }
+
+    // Ordenar los usuarios por número de reviews en forma descendente
+    qsort(usersArr, user_count, sizeof(UserCount), compare_users);
+
+    // Imprimir los 10 primeros
+    for (int i = 0; i < 10 && i < user_count; i++) {
+        printf("Usuario ID: %d, Reviews: %d\n", usersArr[i].user_id, usersArr[i].reviews);
+    }
+
+    free(usersArr);
 }
