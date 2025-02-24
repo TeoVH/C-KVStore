@@ -410,3 +410,117 @@ void top_10_users_most_reviews(HashTable *table_users) {
 
     free(usersArr);
 }
+
+// Función para encontrar los juegos que más recomiendan los 10 usuarios con más reviews
+void top_games_by_top_users(HashTable *table_games, HashTable *table_recommendations, HashTable *table_users) {
+    printf("\nTop 10 Juegos Recomendados por los 10 Usuarios con Más Reviews:\n");
+
+    // 1. Recopilar todos los usuarios en un arreglo dinámico
+    int capacity_users = 10000;
+    UserCount *usersArr = malloc(capacity_users * sizeof(UserCount));
+    if (!usersArr) {
+        printf("Error: No se pudo asignar memoria para usuarios.\n");
+        return;
+    }
+    int total_users = 0;
+    for (int i = 0; i < HASH_TABLE_SIZE; i++) {
+        HashNode *node = table_users->buckets[i];
+        while (node) {
+            User *user = (User *)node->value;
+            if (user) {
+                if (total_users >= capacity_users) {
+                    capacity_users *= 2;
+                    UserCount *temp = realloc(usersArr, capacity_users * sizeof(UserCount));
+                    if (!temp) {
+                        printf("Error: No se pudo reasignar memoria para usuarios.\n");
+                        free(usersArr);
+                        return;
+                    }
+                    usersArr = temp;
+                }
+                usersArr[total_users].user_id = user->user_id;
+                usersArr[total_users].reviews = user->recommendations;
+                total_users++;
+            }
+            node = node->next;
+        }
+    }
+
+    // Ordenar usuarios de mayor a menor según reviews
+    qsort(usersArr, total_users, sizeof(UserCount), compare_users);
+
+    // Extraer los 10 usuarios con más reviews
+    int top_n = (total_users < 10) ? total_users : 10;
+    int top_user_ids[10];
+    for (int i = 0; i < top_n; i++) {
+        top_user_ids[i] = usersArr[i].user_id;
+    }
+    free(usersArr);
+
+    // 2. Filtrar recomendaciones: contar las recomendaciones (is_recommended==true)
+    // solo de los usuarios top (top_user_ids)
+    int capacity_games = 10000;
+    GameCount *games = malloc(capacity_games * sizeof(GameCount));
+    if (!games) {
+        printf("Error: No se pudo asignar memoria para juegos.\n");
+        return;
+    }
+    int game_count = 0;
+
+    // Recorrer la tabla de recomendaciones
+    for (int i = 0; i < HASH_TABLE_SIZE; i++) {
+        HashNode *node = table_recommendations->buckets[i];
+        while (node) {
+            Recommendation *rec = (Recommendation *)node->value;
+            if (rec && rec->is_recommended) {
+                // Verificar si el usuario está entre los top
+                int is_top = 0;
+                for (int j = 0; j < top_n; j++) {
+                    if (rec->user_id == top_user_ids[j]) {
+                        is_top = 1;
+                        break;
+                    }
+                }
+                if (is_top) {
+                    int found = 0;
+                    for (int j = 0; j < game_count; j++) {
+                        if (games[j].app_id == rec->app_id) {
+                            games[j].count++;
+                            found = 1;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        if (game_count >= capacity_games) {
+                            capacity_games *= 2;
+                            GameCount *temp = realloc(games, capacity_games * sizeof(GameCount));
+                            if (!temp) {
+                                printf("Error: No se pudo reasignar memoria para juegos.\n");
+                                free(games);
+                                return;
+                            }
+                            games = temp;
+                        }
+                        games[game_count].app_id = rec->app_id;
+                        games[game_count].count = 1;
+                        game_count++;
+                    }
+                }
+            }
+            node = node->next;
+        }
+    }
+
+    // 3. Ordenar los juegos por la cantidad de recomendaciones en forma descendente
+    qsort(games, game_count, sizeof(GameCount), compare_games);
+
+    // 4. Mostrar los 10 juegos más recomendados por los top usuarios
+    int top_games_n = (game_count < 10) ? game_count : 10;
+    for (int i = 0; i < top_games_n; i++) {
+        const char *title = get_game_title(table_games, games[i].app_id);
+        printf("Juego: %s (ID: %d), Recomendaciones: %d\n", title, games[i].app_id, games[i].count);
+    }
+
+    free(games);
+}
+
