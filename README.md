@@ -29,7 +29,7 @@ Para lograrlo, se utilizan **tablas hash separadas** para cada tipo de dato, lo 
   - **Top 10 Juegos Más Recomendados:** Se acumulan las recomendaciones positivas a partir de los datos de recomendaciones y se ordenan los juegos en orden descendente según la cantidad de recomendaciones.
   - **Top 10 Juegos Menos Recomendados:** Se acumulan las recomendaciones negativas a partir de los datos de recomendaciones y se ordenan los juegos en orden ascendente según la cantidad de recomendaciones negativas.
   - **Top 10 Usuarios con Más Reviews:** Se ordenan los usuarios en función de la cantidad de reviews (del archivo users.csv) en orden descendente.
-  - **Juegos Recomendados por los Top 10 Usuarios:** (Mejora futura)
+  - **Juegos Recomendados por los Top 10 Usuarios:** Se filtran las recomendaciones de los 10 usuarios con más reviews para obtener los juegos con mayor cantidad de recomendaciones entre ellos.
 
 ---
 
@@ -54,8 +54,8 @@ Después de compilar, ejecuta el programa con:
 El programa presenta un menú interactivo que permite realizar las siguientes consultas:
 - a. Indicar cuáles son los 10 juegos más recomendados.
 - b. Indicar cuáles son los 10 juegos menos recomendados.
-- c. Indicar cuáles son los 10 usuarios con más recomendaciones. (No implementada)
-- d. Indicar cuáles son los juegos que más recomiendan los 10 usuarios. (No implementada)
+- c. Indicar cuáles son los 10 usuarios con más recomendaciones.
+- d. Indicar cuáles son los juegos que más recomiendan los 10 usuarios.
 - e. Salir del programa.
 
 Las consultas se realizan sobre los datos almacenados en las tablas hash, lo que permite respuestas rápidas y eficientes, incluso con grandes volúmenes de datos.
