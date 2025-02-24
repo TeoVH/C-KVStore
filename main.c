@@ -1,5 +1,6 @@
 // main.c - Menú interactivo para consultas
 #include "kv_store.h"
+#include <time.h>
 #include <dirent.h>
 #include <stdlib.h>
 
@@ -63,19 +64,32 @@ int main() {
         
         switch (opcion) {
             case 'a':
+		clock_t start_time_a = clock();
+		printf("Mostrando los 10 juegos mas recomendados");
                 top_10_most_recommended(table_games, table_recommendations);
+		clock_t end_time_a = clock();
+		printf("Tiempo de ejecución de la consulta: %.3f segundos\n", ((double)(end_time_a - start_time_a)) / CLOCKS_PER_SEC);
                 break;
             case 'b':
+		clock_t start_time_b = clock();
                 printf("Mostrando los 10 juegos menos recomendados...\n");
                 top_10_least_recommended(table_games, table_recommendations);
+		clock_t end_time_b = clock();
+		printf("Tiempo de ejecución de la consulta: %.3f segundos\n", ((double)(end_time_b - start_time_b)) / CLOCKS_PER_SEC);
                 break;
             case 'c':
+		clock_t start_time_c = clock();
                 printf("Mostrando los 10 usuarios con más recomendaciones...\n");
                 top_10_users_most_reviews(table_users);
+		clock_t end_time_c = clock();
+		printf("Tiempo de ejecución de la consulta: %.3f segundos\n", ((double)(end_time_c - start_time_c)) / CLOCKS_PER_SEC);
                 break;
             case 'd':
+		clock_t start_time_d = clock();
                 printf("Mostrando los juegos que más recomiendan los 10 usuarios...\n");
-                // Implementar consulta para usuarios
+                top_games_by_top_users(table_games, table_recommendations, table_users);
+		clock_t end_time_d = clock();
+		printf("Tiempo de ejecución de la consulta: %.3f segundos\n", ((double)(end_time_d - start_time_d)) / CLOCKS_PER_SEC);
                 break;
             case 'e':
                 printf("Saliendo del programa...\n");
