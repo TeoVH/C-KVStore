@@ -73,6 +73,8 @@ void load_recommendations(const char *filename, HashTable *table);
 const char* get_game_title(HashTable *table, int app_id);
 int compare_games(const void *a, const void *b);
 void top_10_most_recommended(HashTable *table_games, HashTable *table_recommendations);
+void top_games_by_top_users(HashTable *table_games, HashTable *table_recommendations, HashTable *table_users);
+void top_10_users_most_reviews(HashTable *table_users);
 
 #endif // KV_STORE_H
 
