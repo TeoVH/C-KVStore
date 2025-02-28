@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -O3
-TARGET = kv_store
+TARGET = folder
 
 all: $(TARGET)
 
