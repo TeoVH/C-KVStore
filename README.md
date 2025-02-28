@@ -45,7 +45,7 @@ make
 ```
 Después de compilar, ejecuta el programa con:
 ```sh
-./kv_store
+./kv_store -f FOLDER
 ```
 
 ---
